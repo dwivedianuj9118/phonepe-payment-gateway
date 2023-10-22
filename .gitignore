@@ -12,7 +12,6 @@ vendor/composer/installed.php
 vendor/composer/InstalledVersions.php
 vendor/composer/LICENSE
 .DS_Store
-composer.json
 .idea/.gitignore
 .idea/modules.xml
 .idea/phonepe-payment-gateway.iml

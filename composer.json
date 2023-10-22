@@ -1,0 +1,28 @@
+{
+    "name": "dwivedianuj9118/phonepe-payment-gateway",
+    "description": "PhonePe Payment Integration class for handling phonepe payment",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Anuj Dwivedi",
+            "email": "dwivedianuj9118@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dwivedianuj9118/phonepe-payment-gateway"
+        }
+    ],
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dwivedianuj9118\\PhonePePaymentGateway\\": "src/"
+        }
+    }
+}
