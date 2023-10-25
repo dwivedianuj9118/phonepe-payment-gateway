@@ -46,7 +46,7 @@ $amount=100;// Amount in Paisa or amount*100
 $redirectUrl="/success.php";// Redirect Url after Payment success or fail
 $mode="PRODUCTION"; // MODE or PAYMENT UAT(test) or PRODUCTION(production)
 $callbackUrl="/success.php";//Callback Url after Payment success or fail get response
-$mobileNumber=9118840937;//Mobile No
+$mobileNumber=9876543210;//Mobile No
 $data=$config->PaymentCall("$merchantTransactionId","$merchantOrderId","$amount","$redirectUrl","$callbackUrl","$mobileNumber","$mode");// call function to get response form phonepe like url,msg,status
 //header('Location:'. $data['url']);//use when you directly want to redirect to phonepe gateway
 echo $data['url']; // here you get url after initiated PhonePe gateway
