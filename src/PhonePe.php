@@ -9,8 +9,8 @@ namespace Dwivedianuj9118\PhonePePaymentGateway;
 class PhonePe
 {
 
-    private const PROD_URL = 'https://api.phonepe.com/apis/hermes/pg/v1/pay';//PROD URL API
-    protected const UAT_URL = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
+    private const PROD_URL = 'https://api.phonepe.com/apis/hermes/pg/v1/';//PROD URL API
+    protected const UAT_URL = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/';
 
     private int $salt_index;
     protected string $salt_key;
@@ -65,7 +65,7 @@ class PhonePe
         $url= self::PROD_URL;
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => "$url",
+            CURLOPT_URL => "$url/pay",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -108,6 +108,55 @@ class PhonePe
             'msg'=>$paymentMsg,
             'status'=>$paymentCode,
         ];
+    }
+
+
+
+    // PhonePe Check Payment Status Api Method
+
+    
+
+    public function PaymentStatus($merchantId, $merchantTransactionId, $mode=null):array
+    {
+
+        $hashString = '/pg/v1/status/' . $merchantId . '/' . $merchantTransactionId . $this->salt_key;
+        $hashedValue = hash('sha256', $hashString);
+        $result = $hashedValue . "###" . $this->salt_index;
+
+        if($mode=='UAT')
+        $url = self::UAT_URL;
+        else
+        $url= self::PROD_URL;
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "$url/status/" . $merchantId . '/' . $merchantTransactionId,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            // CURLOPT_POSTFIELDS => $request,
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "X-VERIFY: " . $result,
+                "accept: application/json",
+                'X-MERCHANT-ID: ' . $merchantTransactionId
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err) {
+         return [
+             'responseCode'=>400,
+             'error'=>$err
+         ];
+        }
+        return json_decode($response);
+       
     }
 
 }
