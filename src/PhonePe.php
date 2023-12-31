@@ -81,7 +81,8 @@ class PhonePe
                 "X-VERIFY: $result",
             ],
         ]);
-
+       echo 'base= '.$base64_payload;
+       echo '\n result= '.$result;
         $response = curl_exec($curl);
 
         $err = curl_error($curl);
@@ -135,7 +136,7 @@ class PhonePe
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
-                "X-MERCHANT-ID:$merchantTransactionId",
+                "X-MERCHANT-ID:$merchantId",
                 "X-VERIFY:$result",
                 "accept: application/json",
                
