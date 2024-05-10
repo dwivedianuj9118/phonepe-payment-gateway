@@ -81,8 +81,7 @@ class PhonePe
                 "X-VERIFY: $result",
             ],
         ]);
-       echo 'base= '.$base64_payload;
-       echo '\n result= '.$result;
+     
         $response = curl_exec($curl);
 
         $err = curl_error($curl);
