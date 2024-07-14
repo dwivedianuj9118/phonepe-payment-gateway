@@ -100,6 +100,13 @@ class PhonePe
                 $payUrl=$res->data->instrumentResponse->redirectInfo->url;
 
 
+            }else{
+                return[
+                    'responseCode'=>$res->code,
+                    'url'=>'',
+                    'msg'=>$res->message,
+                    'status'=>$res->status ?? 'Error from PhonePe Server',
+                ];
             }
         }
         return[
