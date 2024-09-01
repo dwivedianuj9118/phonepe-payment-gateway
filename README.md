@@ -50,4 +50,23 @@ $mobileNumber=9876543210;//Mobile No
 $data=$config->PaymentCall("$merchantTransactionId","$merchantOrderId","$amount","$redirectUrl","$callbackUrl","$mobileNumber","$mode");// call function to get response form phonepe like url,msg,status
 //header('Location:'. $data['url']);//use when you directly want to redirect to phonepe gateway
 echo $data['url']; // here you get url after initiated PhonePe gateway
+
+```
+
+### PhonePe PAY STATUS CHECK API
+
+```
+<?php
+use Dwivedianuj9118\PhonePePaymentGateway\PhonePe;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$config = new PhonePe('PHONEPE_MERCHANTID','PHONEPE_SALTKEY',PHONEPE_SALTINDEX);
+
+$check=$config->PaymentStatus('PHONEPE_MERCHANTID',$merchantTransactionId,$mode);
+  if($check['status']=='SUCCESS' && $check['responseCode']==200) {
+  return 'Payment Success';
+}else{
+return 'Payment Failed';
+}
 ```
