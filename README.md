@@ -53,7 +53,7 @@ echo $data['url']; // here you get url after initiated PhonePe gateway
 
 ```
 
-### PhonePe PAY STATUS CHECK API
+### PhonePe STATUS CHECK API
 
 ```
 <?php
@@ -69,4 +69,20 @@ $check=$config->PaymentStatus('PHONEPE_MERCHANTID',$merchantTransactionId,$mode)
 }else{
 return 'Payment Failed';
 }
+```
+### PhonePe REFUND API
+
+```
+<?php
+use Dwivedianuj9118\PhonePePaymentGateway\PhonePe;
+
+require './vendor/autoload.php';
+
+$config = new PhonePe('PHONEPE_MERCHANTID','PHONEPE_SALTKEY',PHONEPE_SALTINDEX);
+$refundid='REFUND'.rand(1000,9999);
+$callbackUrl='';//callback url to get response use webhook site https://webhook.site
+
+$refund=$config->PaymentRefund('PHONEPE_MERCHANTID',$refundid, merchantTransactionId,$callbackUrl,$amount, $mode);
+print_r($refund);
+
 ```
