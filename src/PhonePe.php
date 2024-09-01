@@ -177,5 +177,82 @@ class PhonePe
        
     }
 
+    public function PaymentRefund($merchantId, $refundtransactionId, $orderTransactionId, $callbackUrl, $amount, $mode = null):array
+    {
+        $paymentMsg="";
+        $paymentCode="";
+        $state="";
+        $payload = array(
+            "merchantId" => "$merchantId",
+            "merchantTransactionId" => "$refundtransactionId",
+            "originalTransactionId" => "$orderTransactionId",
+            "amount" => $amount,
+            "callbackUrl" => "$callbackUrl"
+            );
+
+        $payload_str = json_encode($payload);
+        $base64_payload = base64_encode($payload_str);
+        $hashString = $base64_payload . "/pg/v1/refund" . $this->salt_key;
+        $hashedValue = hash('sha256', $hashString);
+        $result = $hashedValue . "###" . $this->salt_index;
+
+        if($mode=='UAT')
+        $url = self::UAT_URL.'pay';
+        else
+        $url= self::PROD_URL.'pay';
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "$url",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                'request' => "$base64_payload",
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "accept: application/json",
+                "X-VERIFY: $result",
+            ],
+        ]);
+     
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err) {
+         return [
+             'responseCode'=>400,
+             'error'=>$err
+         ];
+        } else {
+            $res = json_decode($response);
+            
+            if(isset($res->success) && $res->success=='1'){
+                $paymentCode=$res->code;
+                $paymentMsg=$res->message;
+                $state=$res->data->state;
+            
+
+            }else{
+                return[
+                    'responseCode'=>$res->code,
+                    'state'=>$res->code,
+                    'msg'=>$res->message ?? 'Error from PhonePe Server'.$res->code,
+                    'status'=>$res->status ?? 'Error from PhonePe Server'.$res->code,
+                ];
+            }
+        }
+
+        return[
+            'responseCode'=>200,
+            'state'=>$state,
+            'msg'=>$paymentMsg,
+            'status'=>$paymentCode,
+        ];
+    }
 
 }
